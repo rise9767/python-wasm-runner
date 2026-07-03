@@ -48,20 +48,36 @@ python-wasm-runner/
    first load, cached after that).
 4. Type Python in the editor, click **Run** (or `Ctrl/Cmd+Enter`).
 
-## Extending it
+## Features
 
-- **Install PyPI packages at runtime** (pure-Python wheels only):
-  ```javascript
-  await pyodide.loadPackage("micropip");
-  const micropip = pyodide.pyimport("micropip");
-  await micropip.install("package-name");
-  ```
-  Add this inside `app.js` before `runCode()`, e.g. triggered by a
-  "Packages" button.
+- **Package manager (sidebar)** — search installs from two sources:
+  - Packages Pyodide ships precompiled as WASM (numpy, pandas,
+    matplotlib, scipy, scikit-learn, etc.) install instantly via
+    `pyodide.loadPackage()`, tagged **wasm built-in** in results.
+  - Anything else is checked against PyPI's JSON API
+    (`pypi.org/pypi/<name>/json`) and, if it exists, installed as a
+    pure-Python wheel via `micropip.install()`, tagged **pypi**.
+    Packages with C extensions that Pyodide hasn't precompiled won't
+    install this way — that's a Pyodide/WASM limitation, not this
+    app's.
+  - The "Installed" list below tracks what's been added this session.
 
-- **File upload** is already wired up (`upload.addEventListener`
-  in `app.js`) — files land in Pyodide's virtual filesystem, so
+- **Save / Open `.py` file** — top of the editor panel:
+  - The filename field is editable; **Save** downloads the editor's
+    contents as a `.py` file via a `Blob` + temporary download link
+    (no server involved).
+  - **Open** triggers a native file picker restricted to `.py` files;
+    the selected file's text replaces the editor contents and the
+    filename field updates to match.
+  - This is a plain download/upload — it does not overwrite a file on
+    disk in place. Re-uploading a saved file and re-downloading is the
+    round trip.
+
+- **Data file upload** (separate from the package manager and from
+  Open) — files land in Pyodide's virtual filesystem, so
   `open("yourfile.csv")` in the user's Python code just works.
+
+## Extending it further
 
 - **matplotlib**: Pyodide ships it. To display a plot instead of
   saving to disk, render to a `<canvas>` or convert the figure to a

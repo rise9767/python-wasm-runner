@@ -16,10 +16,19 @@
     </div>
   </header>
 
-  <main class="board">
-    <section class="editor-panel">
-      <div class="panel-head">main.py</div>
-      <textarea id="code" spellcheck="false"># single file — everything runs top to bottom
+  <main class="layout">
+
+    <div class="board">
+      <section class="editor-panel">
+        <div class="panel-head">
+          <input id="filename" class="filename-input" value="main.py" spellcheck="false" autocomplete="off">
+          <div class="file-actions">
+            <button id="openFile" class="ghost-btn" title="Open a .py file">Open</button>
+            <input type="file" id="openFileInput" accept=".py,text/x-python" hidden>
+            <button id="saveFile" class="ghost-btn" title="Save as .py file">Save</button>
+          </div>
+        </div>
+        <textarea id="code" spellcheck="false"># single file — everything runs top to bottom
 def fib(n):
     a, b = 0, 1
     for _ in range(n):
@@ -29,19 +38,38 @@ def fib(n):
 for i in range(10):
     print(i, fib(i))
 </textarea>
-      <div class="toolbar">
-        <button id="run" disabled>Run</button>
-        <button id="clear">Clear output</button>
-        <label class="upload-label" for="upload">Upload file</label>
-        <input type="file" id="upload" hidden multiple>
-        <span class="hint">Ctrl / Cmd + Enter to run</span>
-      </div>
-    </section>
+        <div class="toolbar">
+          <button id="run" disabled>Run</button>
+          <button id="clear">Clear output</button>
+          <label class="upload-label" for="upload">Upload data file</label>
+          <input type="file" id="upload" hidden multiple>
+          <span class="hint">Ctrl / Cmd + Enter to run</span>
+        </div>
+      </section>
 
-    <section class="output-panel">
-      <div class="panel-head">Output <span id="timing"></span></div>
-      <pre id="output"><span class="empty">// nothing run yet</span></pre>
-    </section>
+      <section class="output-panel">
+        <div class="panel-head">Output <span id="timing"></span></div>
+        <pre id="output"><span class="empty">// nothing run yet</span></pre>
+      </section>
+    </div>
+
+    <aside class="board packages-board">
+      <div class="panel-head">Packages</div>
+
+      <div class="pkg-search-row">
+        <input id="pkgSearch" class="pkg-search" type="text" placeholder="search packages… e.g. pandas" autocomplete="off">
+        <button id="pkgSearchBtn" class="ghost-btn">Search</button>
+      </div>
+      <div id="pkgResults" class="pkg-list">
+        <div class="pkg-empty">type a name and search — built-in wasm packages install instantly, anything else installs from PyPI</div>
+      </div>
+
+      <div class="pkg-sub-head">Installed <span id="installedCount"></span></div>
+      <div id="installedList" class="pkg-list installed">
+        <div class="pkg-empty">nothing installed yet</div>
+      </div>
+    </aside>
+
   </main>
 
   <footer class="footer">
