@@ -48,6 +48,31 @@ python-wasm-runner/
    first load, cached after that).
 4. Type Python in the editor, click **Run** (or `Ctrl/Cmd+Enter`).
 
+## Troubleshooting: "Open / Save / Search don't do anything"
+
+This was a real bug in an earlier version: every button's event listener
+was wired up inside one `async` function that started with
+`await loadPyodide(...)`. If that call was slow, blocked, or failed —
+CDN blocked by network/ad-blocker, offline, viewed inside a sandboxed
+preview with no outbound network — the function returned early and
+**no button on the page ever got wired up**, including Save/Open,
+which don't need Python at all.
+
+Fixed now: Save, Open, Clear, and general editing are wired up first,
+synchronously, before any network call runs — they work regardless of
+whether the interpreter loads. Run and the package search/install only
+activate once the status dot turns green; clicking them before that
+shows a clear "not ready" message instead of doing nothing silently.
+
+If the status dot stays amber/red and never turns green:
+- Open the browser dev console (F12) and check for a red error —
+  it'll usually say it can't reach `cdn.jsdelivr.net`.
+- Confirm you're loading the page over `http://` or `https://`
+  (see the server setup above), not a `file://` path or a sandboxed
+  in-app preview with no outbound network.
+- Check for an ad blocker, corporate proxy, or browser extension that
+  blocks `cdn.jsdelivr.net`.
+
 ## Features
 
 - **Package manager (sidebar)** — search installs from two sources:
