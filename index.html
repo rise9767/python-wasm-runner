@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Runner — WASM</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <h1>Python Runner <span>// wasm</span></h1>
+    <div class="status">
+      <span id="statusDot" class="dot"></span>
+      <span id="statusText">booting interpreter…</span>
+    </div>
+  </header>
+
+  <main class="board">
+    <section class="editor-panel">
+      <div class="panel-head">main.py</div>
+      <textarea id="code" spellcheck="false"># single file — everything runs top to bottom
+def fib(n):
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    return a
+
+for i in range(10):
+    print(i, fib(i))
+</textarea>
+      <div class="toolbar">
+        <button id="run" disabled>Run</button>
+        <button id="clear">Clear output</button>
+        <label class="upload-label" for="upload">Upload file</label>
+        <input type="file" id="upload" hidden multiple>
+        <span class="hint">Ctrl / Cmd + Enter to run</span>
+      </div>
+    </section>
+
+    <section class="output-panel">
+      <div class="panel-head">Output <span id="timing"></span></div>
+      <pre id="output"><span class="empty">// nothing run yet</span></pre>
+    </section>
+  </main>
+
+  <footer class="footer">
+    no server round-trip — CPython (WebAssembly) runs in this tab
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
